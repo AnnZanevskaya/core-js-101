@@ -231,8 +231,26 @@ function getRectangleString(width, height) {
  *    => 'NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm'
  *
  */
-function encodeToRot13(/* str */) {
-  throw new Error('Not implemented');
+function encodeToRot13(str) {
+  let result = '';
+
+  const getIndex = (c, ...minmax) => {
+    const [min, max] = minmax;
+    return c.charCodeAt() + 13 <= max ? c.charCodeAt() + 13 : c.charCodeAt() + 12 - max + min;
+  };
+
+  str.split('').forEach((char) => {
+    if (/[A-Z]/.test(char)) {
+      const index = getIndex(char, 65, 90);
+      result += String.fromCharCode(index);
+    } else if (/[a-z]/.test(char)) {
+      const index = getIndex(char, 97, 122);
+      result += String.fromCharCode(index);
+    } else {
+      result += char;
+    }
+  });
+  return result;
 }
 
 /**
@@ -248,8 +266,12 @@ function encodeToRot13(/* str */) {
  *   isString('test') => true
  *   isString(new String('test')) => true
  */
-function isString(/* value */) {
-  throw new Error('Not implemented');
+function isString(value) {
+  if (value) {
+    return Object.getPrototypeOf(value) === String.prototype;
+  }
+
+  return false;
 }
 
 
@@ -277,8 +299,13 @@ function isString(/* value */) {
  *   'Q♠' => 50
  *   'K♠' => 51
  */
-function getCardId(/* value */) {
-  throw new Error('Not implemented');
+function getCardId(value) {
+  return [
+    'A♣', '2♣', '3♣', '4♣', '5♣', '6♣', '7♣', '8♣', '9♣', '10♣', 'J♣', 'Q♣', 'K♣',
+    'A♦', '2♦', '3♦', '4♦', '5♦', '6♦', '7♦', '8♦', '9♦', '10♦', 'J♦', 'Q♦', 'K♦',
+    'A♥', '2♥', '3♥', '4♥', '5♥', '6♥', '7♥', '8♥', '9♥', '10♥', 'J♥', 'Q♥', 'K♥',
+    'A♠', '2♠', '3♠', '4♠', '5♠', '6♠', '7♠', '8♠', '9♠', '10♠', 'J♠', 'Q♠', 'K♠',
+  ].indexOf(value);
 }
 
 
